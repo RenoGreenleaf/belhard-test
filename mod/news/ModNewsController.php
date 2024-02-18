@@ -17,6 +17,11 @@ class ModNewsController extends Common {
         $list->addColumn($this->_('Заголовок'));
         $list->addColumn($this->_('Автор'));
         $list->addColumn($this->_('Дата'), "100", "DATETIME");
+        $list->SQL = "
+            SELECT id, title, u.u_login, published
+            FROM news_article AS a
+            LEFT JOIN core_users u ON u.u_id = a.author_id
+        ";
         $list->showTable();
     }
 }
