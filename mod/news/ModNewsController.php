@@ -22,6 +22,7 @@ class ModNewsController extends Common {
             FROM news_article AS a
             LEFT JOIN core_users u ON u.u_id = a.author_id
         ";
+        $list->deleteKey = "news_article.id";
         $list->showTable();
     }
 }
