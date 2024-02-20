@@ -3,6 +3,7 @@
 require_once DOC_ROOT . 'core2/inc/classes/Common.php';
 require_once DOC_ROOT . 'core2/inc/classes/class.list.php';
 require_once DOC_ROOT . 'core2/inc/classes/class.edit.php';
+require_once DOC_ROOT . 'core2/inc/classes/class.tab.php';
 
 
 class ModNewsController extends Common {
@@ -14,15 +15,18 @@ class ModNewsController extends Common {
      * @throws Exception
      */
     public function action_index() {
+        $tab = new \tabs('roles');
+        $tab->beginContainer($this->translate->tr("Новости"));
         if (isset($_GET['edit']) && $_GET['edit'] != '') {
             $form = new \editTable('news_article');
             $form->SQL = $this->db->quoteInto("
-                SELECT id, title, content
+                SELECT `id`, `title`, `content`
                 FROM news_article
                 WHERE id = ?
             ", $_GET['edit']);
             $form->addControl($this->translate->tr("Название:"), "TEXT", "maxlength=\"255\" size=\"60\"", "", "", true);
             $form->addControl($this->translate->tr("Текст:"), "TEXTAREA", "maxlength=\"255\" size=\"60\"", "", "", true);
+            $form->save('xajax_saveNewsArticle(xajax.getFormValues(this.id))');
             $form->showTable();
         }
 
@@ -40,5 +44,6 @@ class ModNewsController extends Common {
         $list->addURL = 'index.php?module=news&edit=0';
         $list->editURL = 'index.php?module=news&edit=TCOL_00';
         $list->showTable();
+        $tab->endContainer();
     }
 }
