@@ -9,9 +9,7 @@ require_once DOC_ROOT . 'core2/inc/classes/class.tab.php';
 class ModNewsController extends Common {
 
     /**
-     * этот метод будет обрадатываться по умолчанию при обращении к модулю
      * @return string|void
-     * @throws Zend_Exception
      * @throws Exception
      */
     public function action_index() {
@@ -21,13 +19,16 @@ class ModNewsController extends Common {
         if (isset($_GET['edit']) && $_GET['edit'] != '') {
             $form = new \editTable('news_article');
             $form->SQL = $this->db->quoteInto('
-                SELECT id, title, content
+                SELECT  id,
+                        title,
+                        content
                 FROM news_article
                 WHERE id = ?
             ', $_GET['edit']);
-            $form->addControl($this->translate->tr("Заголовок:"), "TEXT", "maxlength=\"255\" size=\"60\"", "", "", true);
-            $form->addControl($this->translate->tr("Текст:"), "TEXTAREA", "maxlength=\"255\" size=\"60\"", "", "", true);
+            $form->addControl($this->translate->tr("Заголовок:"), "TEXT", req: true);
+            $form->addControl($this->translate->tr("Текст:"), "TEXTAREA", req: true);
             $form->save('xajax_saveNewsArticle(xajax.getFormValues(this.id))');
+            $form->back = 'index.php?module=news';
             $form->showTable();
         }
 
